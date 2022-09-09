@@ -1,6 +1,6 @@
 package apiserver
 
-import "github.com/Brotiger/https_rest_api_go.git/internal/app/store"
+import "github.com/Brotiger/rest_api_gopher.git/internal/app/store"
 
 type Config struct {
 	BindAddr string `toml:"bind_addr"`

@@ -4,7 +4,7 @@ import (
 	"flag"
 	"log"
 
-	"github.com/Brotiger/https_rest_api_go.git/internal/app/apiserver"
+	"github.com/Brotiger/rest_api_gopher.git/internal/app/apiserver"
 	"github.com/BurntSushi/toml"
 )
 

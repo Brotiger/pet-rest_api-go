@@ -1,4 +1,4 @@
-module github.com/Brotiger/https_rest_api_go.git
+module github.com/Brotiger/rest_api_gopher.git
 
 go 1.13
 

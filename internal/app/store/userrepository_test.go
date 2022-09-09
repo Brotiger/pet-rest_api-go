@@ -3,8 +3,8 @@ package store_test
 import (
 	"testing"
 
-	"github.com/Brotiger/https_rest_api_go.git/internal/app/model"
-	"github.com/Brotiger/https_rest_api_go.git/internal/app/store"
+	"github.com/Brotiger/rest_api_gopher.git/internal/app/model"
+	"github.com/Brotiger/rest_api_gopher.git/internal/app/store"
 	"github.com/stretchr/testify/assert"
 )
 

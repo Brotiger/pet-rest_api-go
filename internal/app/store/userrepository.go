@@ -1,8 +1,6 @@
 package store
 
-import (
-	"github.com/Brotiger/https_rest_api_go.git/internal/app/model"
-)
+import "github.com/Brotiger/rest_api_gopher.git/internal/app/model"
 
 type UserRepository struct {
 	store *Store
