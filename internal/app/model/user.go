@@ -1,12 +1,24 @@
 package model
 
-import "golang.org/x/crypto/bcrypt"
+import (
+	validation "github.com/go-ozzo/ozzo-validation"
+	"github.com/go-ozzo/ozzo-validation/is"
+	"golang.org/x/crypto/bcrypt"
+)
 
 type User struct {
 	ID                int
 	Email             string
 	Password          string
 	EncrypredPassword string
+}
+
+func (u *User) Validate() error {
+	return validation.ValidateStruct(
+		u,
+		validation.Field(&u.Email, validation.Required, is.Email),
+		validation.Field(&u.Email, validation.By(requiredIf(u.EncrypredPassword == "")), validation.Length(6, 100)),
+	)
 }
 
 func (u *User) BeforeCreate() error {
