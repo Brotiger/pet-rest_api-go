@@ -13,7 +13,7 @@ type APIServer struct {
 	config *Config
 	logger *logrus.Logger
 	router *mux.Router
-	store *store.Store
+	store  *store.Store
 }
 
 func New(config *Config) *APIServer {
@@ -39,12 +39,16 @@ func (s *APIServer) Start() error {
 	return http.ListenAndServe(s.config.BindAddr, s.router)
 }
 
+// Конфигурирование logrus
 func (s *APIServer) configureLogger() error {
+
+	//Извлекаем и парсим log level
 	level, err := logrus.ParseLevel(s.config.LogLevel)
 	if err != nil {
 		return err
 	}
 
+	//Устанавливаем уровень дебага
 	s.logger.SetLevel(level)
 
 	return nil
@@ -54,19 +58,19 @@ func (s *APIServer) configureRouter() {
 	s.router.HandleFunc("/hello", s.handleHello())
 }
 
-func (s *APIServer) configureStore() error{
+func (s *APIServer) configureStore() error {
 	st := store.New(s.config.Store)
 	if err := st.Open(); err != nil {
 		return err
 	}
 
 	s.store = st
-	
+
 	return nil
 }
 
 func (s *APIServer) handleHello() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request){
+	return func(w http.ResponseWriter, r *http.Request) {
 		io.WriteString(w, "Hello")
 	}
 }

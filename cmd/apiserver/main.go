@@ -13,19 +13,24 @@ var (
 )
 
 func init() {
+	//Флаг при запуске бинарника.
 	flag.StringVar(&configPath, "config-path", "configs/apiserver.toml", "path to config file")
 }
 
 func main() {
+	//Берем значение из флага и помещаем в переменную
 	flag.Parse()
 
+	//Созданиеконфига с дефолтными значениями
 	config := apiserver.NewConfig()
+
+	//Декодируем toml файл по тегам
 	_, err := toml.DecodeFile(configPath, config)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	s:= apiserver.New(config)
+	s := apiserver.New(config)
 	if err := s.Start(); err != nil {
 		log.Fatal(err)
 	}

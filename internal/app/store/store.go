@@ -7,8 +7,8 @@ import (
 )
 
 type Store struct {
-	config *Config
-	db *sql.DB
+	config         *Config
+	db             *sql.DB
 	userRepository *UserRepository
 }
 
@@ -24,6 +24,7 @@ func (s *Store) Open() error {
 		return err
 	}
 
+	//Проверка соединения
 	if err := db.Ping(); err != nil {
 		return err
 	}

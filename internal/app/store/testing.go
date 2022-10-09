@@ -6,6 +6,7 @@ import (
 	"testing"
 )
 
+// Сброс таблиц при тестировании
 func TestStore(t *testing.T, databaseURL string) (*Store, func(...string)) {
 	t.Helper()
 
@@ -23,7 +24,7 @@ func TestStore(t *testing.T, databaseURL string) (*Store, func(...string)) {
 				t.Fatal(err)
 			}
 		}
-		
+
 		s.Close()
 	}
 }
