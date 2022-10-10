@@ -1,30 +1,32 @@
-package store_test
+package pgstore_test
 
 import (
 	"testing"
 
 	"github.com/Brotiger/rest_api_gopher.git/internal/app/model"
 	"github.com/Brotiger/rest_api_gopher.git/internal/app/store"
+	"github.com/Brotiger/rest_api_gopher.git/internal/app/store/pgstore"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestUserRepository_Create(t *testing.T) {
-	s, teardown := store.TestStore(t, databaseURL)
+	db, teardown := pgstore.TestDB(t, databaseURL)
 	defer teardown("users")
 
-	u, err := s.User().Create(model.TestUser(t))
-
-	assert.NoError(t, err)
+	s := pgstore.New(db)
+	u := model.TestUser(t)
+	assert.NoError(t, s.User().Create(u))
 	assert.NotNil(t, u)
 }
 
 func TestUserRepository_FindByEmail(t *testing.T) {
-	s, teardown := store.TestStore(t, databaseURL)
+	db, teardown := pgstore.TestDB(t, databaseURL)
 	defer teardown("users")
 
+	s := pgstore.New(db)
 	email := "user@example.org"
 	_, err := s.User().FindByEmail(email)
-	assert.Error(t, err)
+	assert.EqualError(t, err, store.ErrRecordNotFound.Error())
 
 	u := model.TestUser(t)
 	u.Email = email
