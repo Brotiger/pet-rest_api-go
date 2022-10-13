@@ -61,7 +61,7 @@ func TestUser_Validate(t *testing.T) {
 			u: func() *model.User {
 				u := model.TestUser(t)
 				u.Password = ""
-				u.EncrypredPassword = "asdasd"
+				u.EncryptedPassword = "asdasd"
 				return u
 			},
 			isValid: true,
@@ -82,5 +82,5 @@ func TestUser_Validate(t *testing.T) {
 func TestUser_BeforeCreate(t *testing.T) {
 	u := model.TestUser(t)
 	assert.NoError(t, u.BeforeCreate())
-	assert.NotEmpty(t, u.EncrypredPassword)
+	assert.NotEmpty(t, u.EncryptedPassword)
 }

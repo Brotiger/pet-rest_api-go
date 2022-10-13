@@ -7,17 +7,17 @@ import (
 )
 
 type User struct {
-	ID                int
-	Email             string
-	Password          string
-	EncrypredPassword string
+	ID                int    `json:"id"`
+	Email             string `json:"email"`
+	Password          string `json:"password,omitempty"`
+	EncryptedPassword string `json:"-"`
 }
 
 func (u *User) Validate() error {
 	return validation.ValidateStruct(
 		u,
 		validation.Field(&u.Email, validation.Required, is.Email),
-		validation.Field(&u.Email, validation.By(requiredIf(u.EncrypredPassword == "")), validation.Length(6, 100)),
+		validation.Field(&u.Password, validation.By(requiredIf(u.EncryptedPassword == "")), validation.Length(6, 100)),
 	)
 }
 
@@ -28,10 +28,14 @@ func (u *User) BeforeCreate() error {
 			return err
 		}
 
-		u.EncrypredPassword = enc
+		u.EncryptedPassword = enc
 	}
 
 	return nil
+}
+
+func (u *User) Sanitize() {
+	u.Password = ""
 }
 
 func encryptString(s string) (string, error) {

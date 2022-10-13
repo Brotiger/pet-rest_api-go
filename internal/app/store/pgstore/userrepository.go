@@ -23,7 +23,7 @@ func (r *UserRepository) Create(u *model.User) error {
 	return r.store.db.QueryRow(
 		"INSERT INTO users (email, encrypted_password) VALUES ($1, $2) RETURNING id",
 		u.Email,
-		u.EncrypredPassword,
+		u.EncryptedPassword,
 	).Scan(&u.ID)
 }
 
@@ -36,7 +36,7 @@ func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
 	).Scan(
 		&u.ID,
 		&u.Email,
-		&u.EncrypredPassword,
+		&u.EncryptedPassword,
 	); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, store.ErrRecordNotFound

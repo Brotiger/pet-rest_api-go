@@ -26,14 +26,15 @@ func TestUserRepository_FindByEmail(t *testing.T) {
 	s := pgstore.New(db)
 	email := "user@example.org"
 	_, err := s.User().FindByEmail(email)
-	assert.EqualError(t, err, store.ErrRecordNotFound.Error())
 
+	assert.EqualError(t, err, store.ErrRecordNotFound.Error())
 	u := model.TestUser(t)
 	u.Email = email
 
 	s.User().Create(u)
 
 	u, err = s.User().FindByEmail(email)
+
 	assert.NoError(t, err)
 	assert.NotNil(t, u)
 
