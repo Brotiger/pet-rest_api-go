@@ -8,7 +8,12 @@ import (
 	"github.com/Brotiger/rest_api_gopher.git/internal/app/model"
 	"github.com/Brotiger/rest_api_gopher.git/internal/app/store"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
 	"github.com/sirupsen/logrus"
+)
+
+const (
+	sessionName = "session"
 )
 
 var (
@@ -16,16 +21,18 @@ var (
 )
 
 type server struct {
-	router *mux.Router
-	logger *logrus.Logger
-	store  store.Store
+	router       *mux.Router
+	logger       *logrus.Logger
+	store        store.Store
+	sessionStore sessions.Store
 }
 
-func NewServer(store store.Store) *server {
+func NewServer(store store.Store, sessionStore sessions.Store) *server {
 	s := &server{
-		router: mux.NewRouter(),
-		logger: logrus.New(),
-		store:  store,
+		router:       mux.NewRouter(),
+		logger:       logrus.New(),
+		store:        store,
+		sessionStore: sessionStore,
 	}
 
 	s.configureRouter()
@@ -87,6 +94,17 @@ func (s *server) handleSessionsCreate() http.HandlerFunc {
 			s.error(w, r, http.StatusUnauthorized, errIncorectEmailOrPassword)
 		}
 
+		session, err := s.sessionStore.Get(r, sessionName)
+
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+		}
+
+		session.Values["user_id"] = u.ID
+
+		if err := s.sessionStore.Save(r, w, session); err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+		}
 		s.response(w, r, http.StatusOK, nil)
 	}
 }

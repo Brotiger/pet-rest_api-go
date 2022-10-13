@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/Brotiger/rest_api_gopher.git/internal/app/store/pgstore"
+	"github.com/gorilla/sessions"
 )
 
 func Start(config *Config) error {
@@ -16,7 +17,8 @@ func Start(config *Config) error {
 	defer db.Close()
 
 	store := pgstore.New(db)
-	srv := NewServer(store)
+	sessionStore := sessions.NewCookieStore([]byte(config.SessionKey))
+	srv := NewServer(store, sessionStore)
 
 	return http.ListenAndServe(config.BindAddr, srv)
 }
