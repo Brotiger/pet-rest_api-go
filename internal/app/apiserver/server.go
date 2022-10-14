@@ -92,18 +92,21 @@ func (s *server) handleSessionsCreate() http.HandlerFunc {
 		u, err := s.store.User().FindByEmail(req.Email)
 		if err != nil || !u.ComparePassword(req.Password) {
 			s.error(w, r, http.StatusUnauthorized, errIncorectEmailOrPassword)
+			return
 		}
 
 		session, err := s.sessionStore.Get(r, sessionName)
 
 		if err != nil {
 			s.error(w, r, http.StatusInternalServerError, err)
+			return
 		}
 
 		session.Values["user_id"] = u.ID
 
 		if err := s.sessionStore.Save(r, w, session); err != nil {
 			s.error(w, r, http.StatusInternalServerError, err)
+			return
 		}
 		s.response(w, r, http.StatusOK, nil)
 	}
